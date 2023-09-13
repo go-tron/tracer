@@ -9,7 +9,7 @@ import (
 	"log"
 )
 
-func NewWithConfig(c *config.Config) (opentracing.Tracer, io.Closer) {
+func NewJaegerWithConfig(c *config.Config) (opentracing.Tracer, io.Closer) {
 	host := c.GetString("jaeger.host")
 	if host == "cluster.nodeIP" {
 		host = c.GetString(host)
@@ -21,10 +21,10 @@ func NewWithConfig(c *config.Config) (opentracing.Tracer, io.Closer) {
 	if port == "" {
 		panic("port 必须设置")
 	}
-	return New(c.GetString("application.name")+"."+c.GetString("cluster.namespace"), host+":"+port)
+	return NewJaeger(c.GetString("application.name")+"."+c.GetString("cluster.namespace"), host+":"+port)
 }
 
-func New(serviceName string, hostPort string) (opentracing.Tracer, io.Closer) {
+func NewJaeger(serviceName string, hostPort string) (opentracing.Tracer, io.Closer) {
 	log.Println("jaeger hostPort", hostPort)
 	cfg := &jaegerconfig.Configuration{
 		ServiceName: serviceName,
